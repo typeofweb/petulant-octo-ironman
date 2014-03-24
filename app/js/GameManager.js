@@ -1,6 +1,6 @@
 define('GameManager',
-    ['config', 'keys', 'Object', 'debug'],
-    function (config, keys, Object, debug) {
+    ['config', 'keys', 'Entity', 'debug'],
+    function (config, keys, Entity, debug) {
         function GameManager () {
             this.objects = [];
             this.player;
@@ -10,20 +10,20 @@ define('GameManager',
             this.previous = Date.now();
             this.lag = 0;
             
-            var bg = new Object({id: 'background', image: 'img/bg.png', collidable: false, size: {x: 640, y: 480}});
+            var bg = new Entity({id: 'background', image: 'img/bg.png', collidable: false, size: {x: 640, y: 480}});
             this.objects.push(bg);
             
-            var bottom = new Object({id: 'bottom', size: {x: 640, y: 50}});
+            var bottom = new Entity({id: 'bottom', size: {x: 640, y: 50}});
             bottom.position.x = 0;
             bottom.position.y = 430;
             this.objects.push(bottom);
             
-            bottom = new Object({id: 'bottom', size: {x: 50, y: 50}});
+            bottom = new Entity({id: 'bottom', size: {x: 50, y: 50}});
             bottom.position.x = 0;
             bottom.position.y = 100;
             this.objects.push(bottom);
             
-            var player = new Object({id: 'player', image: 'img/player.png', movable: true, speed: 200, size: {x: 44, y: 64.333333333}});
+            var player = new Entity({id: 'player', image: 'img/player.png', movable: true, speed: 200, size: {x: 44, y: 64.333333333}});
             player.acceleration.y = 300;
             player.collideWith = function (obj) {
                 this.velocity.y = 0;

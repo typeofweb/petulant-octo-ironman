@@ -1,10 +1,10 @@
-define('Object',
+define('Entity',
     ['Vec2', 'Drawer', 'Resource', 'config'],
     function (Vec2, Drawer, Resource, config) {
         var drawer = new Drawer();
         var dt = config.MS_PER_UPDATE/1000;
         
-        function Object (config) {
+        function Entity (config) {
             this.id = config.id || Math.random().toString(30).substr(2);
             this.position = new Vec2();
             this.velocity = new Vec2();
@@ -19,13 +19,13 @@ define('Object',
             });
         };
         
-        Object.prototype.collideWith = function () {
+        Entity.prototype.collideWith = function () {
             if (this.movable) {
                 throw "Error: Abstract method collideWith";
             }
         };
 
-        Object.prototype.render = function (inter) {
+        Entity.prototype.render = function (inter) {
             var cPos = new Vec2();
             cPos.x = this.position.x + this.velocity.x * dt * inter + this.acceleration.x * dt * dt / 2 * inter;
             cPos.y = this.position.y + this.velocity.y * dt * inter + this.acceleration.y * dt * dt / 2 * inter;
@@ -33,7 +33,7 @@ define('Object',
             drawer.drawObject(this, cPos);
         };
 
-        Object.prototype.update = function () {            
+        Entity.prototype.update = function () {            
             this.velocity.x += this.acceleration.x * dt;
             this.velocity.y += this.acceleration.y * dt;
             
@@ -41,14 +41,14 @@ define('Object',
             this.position.y  += this.velocity.y * dt + this.acceleration.y * dt * dt / 2;
         };
         
-        Object.prototype.stopMoving = function () {
+        Entity.prototype.stopMoving = function () {
             this.acceleration.x = 0;
             this.acceleration.y = 0;
             this.velocity.x = 0;
             this.velocity.y = 0;
         };
         
-        Object.prototype.checkCollisionWith = function (obj) {
+        Entity.prototype.checkCollisionWith = function (obj) {
             if (!this.collidable) {
                 return false;
             }
@@ -59,7 +59,7 @@ define('Object',
             }
         };
         
-        Object.prototype.AABB = function (obj) {
+        Entity.prototype.AABB = function (obj) {
             var size1 = this.resource.getInGameSize();
             var size2 = obj.resource.getInGameSize();
             
@@ -71,6 +71,6 @@ define('Object',
             return true;
         };
         
-        return Object;
+        return Entity;
     }
 );
