@@ -1,0 +1,20 @@
+{
+  "name": "simple_platformer",
+  "version": "0.1.0",
+  "authors": [
+    "MMiszy <lupinek7@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "directory": "bower_components",
+  "dependencies": {
+    "requirejs": "~2.1.11"
+  }
+}
