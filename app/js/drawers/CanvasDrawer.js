@@ -8,18 +8,19 @@ define('drawers/CanvasDrawer',
         
         CanvasDrawer.prototype.drawObject = function (obj, position) {
             position = position || obj.position;
-            var x = position.x;
-            var y = position.y;
+            var x = position.x - obj.wx.x;
+            var y = position.y - obj.wy.y;
             
-            var inGameSize = obj.resource.getInGameSize();
+            var sizeX = obj.wx.x*2;
+            var sizeY = obj.wy.y*2
             
             var image = obj.resource.getImage();
             
             if (image) {
-                this.ctx.drawImage(image, x, y, inGameSize.x, inGameSize.y);
+                this.ctx.drawImage(image, x, y, sizeX, sizeY);
             } else {
                 this.ctx.fillStyle = '#ff0000';
-                this.ctx.fillRect(x, y, inGameSize.x, inGameSize.y);
+                this.ctx.fillRect(x, y, sizeX, sizeY);
             }
         };
         

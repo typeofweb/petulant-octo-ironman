@@ -7,13 +7,6 @@ define('Resource',
                 this.image.src = config.image;
             }            
             this.config = config;
-        }
-        
-        Resource.prototype.getInGameSize = function () {
-            return {
-                x: this.config.size.x,
-                y: this.config.size.y  
-            };
         };
         
         Resource.prototype.getImage = function () {

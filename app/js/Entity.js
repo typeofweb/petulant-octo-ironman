@@ -7,6 +7,9 @@ define('Entity',
         function Entity (config) {
             this.id = config.id || Math.random().toString(30).substr(2);
             this.position = new Vec2();
+            this.wx = new Vec2(config.size.x/2, 0)
+            this.wy = new Vec2(0, config.size.y/2);
+            
             this.velocity = new Vec2();
             this.acceleration = new Vec2();
             this.speed = config.speed;
@@ -15,13 +18,20 @@ define('Entity',
             
             this.resource = new Resource({
                 image: config.image,
-                size: config.size
+                size: new Vec2(config.size.x, config.size.y)
             });
         };
         
-        Entity.prototype.collideWith = function () {
+        Entity.prototype.getDimensions = function () {
+            return {
+                topLeft: new Vec2(this.position.x - this.wx.x, this.position.y - this.wy.y),
+                bottomRight: new Vec2(this.position.x + this.wx.x, this.position.y + this.wy.y)
+            };  
+        };
+        
+        Entity.prototype.collideWith = function (obj, projectionVector) {
             if (this.movable) {
-                throw "Error: Abstract method collideWith";
+                throw "Error: Not implemented";
             }
         };
 
@@ -46,29 +56,6 @@ define('Entity',
             this.acceleration.y = 0;
             this.velocity.x = 0;
             this.velocity.y = 0;
-        };
-        
-        Entity.prototype.checkCollisionWith = function (obj) {
-            if (!this.collidable) {
-                return false;
-            }
-            
-            if (this.AABB(obj)) {
-                obj.collideWith(this);
-                this.collideWith(obj);
-            }
-        };
-        
-        Entity.prototype.AABB = function (obj) {
-            var size1 = this.resource.getInGameSize();
-            var size2 = obj.resource.getInGameSize();
-            
-            var o1 = {topLeft: new Vec2(this.position.x, this.position.y), bottomRight: new Vec2(this.position.x + size1.x, this.position.y + size1.y)};
-            var o2 = {topLeft: new Vec2(obj.position.x, obj.position.y), bottomRight: new Vec2(obj.position.x + size2.x, obj.position.y + size2.y)};
-            
-            if(o1.bottomRight.x < o2.topLeft.x || o1.topLeft.x > o2.bottomRight.x) return false;
-            if(o1.bottomRight.y < o2.topLeft.y || o1.topLeft.y > o2.bottomRight.y) return false;
-            return true;
         };
         
         return Entity;

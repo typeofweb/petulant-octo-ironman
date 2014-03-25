@@ -27,7 +27,9 @@ define('debug',
                 if (!config.DEBUG) {
                     return;
                 }
-                arrayRotate(fpses, 1000 / dt, 50);
+                if (dt > 10) {
+                    arrayRotate(fpses, 1000 / dt, 50);   
+                }
                 fpsContainer.textContent = avg.apply(null, fpses).toFixed(0);
             }
         };
