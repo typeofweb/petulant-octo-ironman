@@ -1,6 +1,8 @@
 define('PhysicsEngine',
-    ['Vec2'],
-    function (Vec2) {
+    ['Vec2', 'config'],
+    function (Vec2, config) {
+        var dt = config.MS_PER_UPDATE/1000;
+        
         function PhysicsEngine () {
         }
         
@@ -41,6 +43,30 @@ define('PhysicsEngine',
                 }
             }
             return null;
+        };
+        
+        PhysicsEngine.prototype.getHalfAccDt = function (obj) {
+            var tempAccDt = new Vec2().add(obj.acceleration);
+            if (obj.gravity) {
+                tempAccDt.add(new Vec2(0, config.GRAVITY));
+            }
+            return tempAccDt.mul(dt / 2);
+        };
+        
+        PhysicsEngine.prototype.newtonEuler = function (obj) {
+            if (!obj.gravity && obj.velocity.isZero() && obj.acceleration.isZero()) {
+                return;
+            }
+            
+            var tempAccDt = this.getHalfAccDt(obj);
+            
+            obj.velocity.add(tempAccDt);
+            
+            obj.position
+                .add(obj.velocity.product(dt))
+                .add(tempAccDt.mul(dt));
+            
+            obj.velocity.add(tempAccDt);
         };
         
         return PhysicsEngine;

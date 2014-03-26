@@ -46,21 +46,17 @@ define('Entity',
             drawer.drawObject(this, cPos);
         };
 
-        Entity.prototype.update = function () {            
-            this.velocity.x += this.acceleration.x * dt;
-            this.velocity.y += this.acceleration.y * dt;
-            
-            if (this.velocity.x) {
-                this.facing = this.velocity.x;
-            }
-            
-            this.position.x  += this.velocity.x * dt + this.acceleration.x * dt * dt / 2;
-            this.position.y  += this.velocity.y * dt + this.acceleration.y * dt * dt / 2;
-            
-            if (this.movable && this.velocity.len() > 5) {
-                this.resource.nextFrame(this.facing);
-            } else {
-                this.resource.resetFrame(this.facing);
+        Entity.prototype.update = function () {
+            if (this.movable) {
+                if (this.velocity.x) {
+                    this.facing = this.velocity.x;
+                }
+                
+                if (this.velocity.len() > 5) {
+                    this.resource.nextFrame(this.facing);
+                } else {
+                    this.resource.resetFrame(this.facing);
+                }   
             }
         };
         

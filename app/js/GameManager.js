@@ -30,7 +30,7 @@ define('GameManager',
             
             var bottom = new Entity({id: 'bottom', size: {x: 640, y: 50}});
             bottom.position.x = 320;
-            bottom.position.y = 455;
+            bottom.position.y = 505;
             this.objects.push(bottom);
             
             var bottom = new Entity({id: 'top', size: {x: 640, y: 50}});
@@ -67,6 +67,7 @@ define('GameManager',
             player.position.x = player.wx.x;
             player.position.y = player.wy.y;
             player.acceleration.y = 300;
+            player.gravity = true;
             player.collideWith = function (obj, projectionVector) {
                 var side = physicsEngine.getCollisionSideFromProjection(projectionVector);
                 switch (side) {
@@ -126,14 +127,12 @@ define('GameManager',
             
             this.tick(this.loop.bind(this));
         };
-        
-        GameManager.prototype.applyGravity = function (obj) {
-            var dt = config.MS_PER_UPDATE/1000;
-            obj.velocity.y += config.GRAVITY * dt;
-        };
 
         GameManager.prototype.updateAll = function () {
             this.objects.forEach(function (o) {
+                if (o.movable) {
+                    physicsEngine.newtonEuler(o);
+                }
                 o.update();
             });
             
@@ -150,14 +149,6 @@ define('GameManager',
                     }
                 }
             }
-            
-            var movableObjects = this.objects.filter(function (obj) {
-                return obj.movable;
-            });
-            
-            movableObjects.forEach(function (o) {
-                this.applyGravity(o);
-            }.bind(this));
         };
 
         GameManager.prototype.renderAll = function (nextFrame) {

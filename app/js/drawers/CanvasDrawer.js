@@ -25,7 +25,7 @@ define('drawers/CanvasDrawer',
                     this.ctx.drawImage(image, dx, dy, dw, dh);
                 }
             } else {
-                this.ctx.fillStyle = '#ff0000';
+                this.ctx.fillStyle = '#8b4513';
                 this.ctx.fillRect(dx, dy, dw, dh);
             }
         };
