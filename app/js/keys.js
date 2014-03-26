@@ -1,5 +1,6 @@
 define('keys',
     function () {
+        'use strict';
         var keys = {
             'UP': 38,
             'RIGHT': 39,

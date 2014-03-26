@@ -1,6 +1,7 @@
 define('Resource',
     ['Vec2', 'config'],
     function (Vec2, config) {
+        'use strict';
         var dt = config.MS_PER_UPDATE;
         
         function Resource (config) {
@@ -16,7 +17,7 @@ define('Resource',
             this.frame = 0;
             this.count = 0;
             this.animationDir = 1;
-        };
+        }
         
         Resource.prototype.getImage = function () {
             return this.image;
@@ -45,18 +46,16 @@ define('Resource',
         Resource.prototype.resetFrame = function (direction) {
             this.count = 0;
             this.direction = direction;
-            return this.frame = 0;  
+            return (this.frame = 0);
         };
         
         Resource.prototype.getRenderingInfo = function () {
-            var ret = {
+            return  {
                 sx: this.size.x * this.frame,
                 sy: (this.direction < 0) ? this.size.y : 0,
                 sw: this.size.x / this.scale,
                 sh: this.size.y / this.scale
             };
-            
-            return ret;
         };
         
         return Resource;

@@ -1,5 +1,6 @@
 define('config',
     function () {
+        'use strict';
         var config = {
             'DRAWER': 'canvas',
             'MS_PER_UPDATE': 1000/60,

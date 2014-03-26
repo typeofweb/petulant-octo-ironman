@@ -1,6 +1,7 @@
 define('debug',
     ['config'],
     function (config) {
+        'use strict';
         var fpsContainer = document.querySelector('.fps');
         var fpses = [];
         
@@ -28,7 +29,7 @@ define('debug',
                     return;
                 }
                 if (dt > 10) {
-                    arrayRotate(fpses, 1000 / dt, 50);   
+                    arrayRotate(fpses, 1000 / dt, 50);
                 }
                 fpsContainer.textContent = avg.apply(null, fpses).toFixed(0);
             }

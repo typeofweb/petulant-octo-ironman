@@ -1,12 +1,13 @@
 define('PhysicsEngine',
     ['Vec2', 'config'],
     function (Vec2, config) {
+        'use strict';
         var dt = config.MS_PER_UPDATE/1000;
         
         function PhysicsEngine () {
         }
         
-        PhysicsEngine.prototype.AABB = function (obj1, obj2) {
+        PhysicsEngine.prototype.aabb = function (obj1, obj2) {
             var ox = (obj1.wx.len() + obj2.wx.len()) - Math.abs(obj1.position.diff(obj2.position).x);
             if (ox <= 0) {
                 return null;
@@ -19,7 +20,7 @@ define('PhysicsEngine',
             
             var projectionVector;
 
-            if (ox < oy) { 
+            if (ox < oy) {
                 projectionVector = new Vec2((obj1.position.x > obj2.position.x) ? ox : -ox, 0);
             } else {
                 projectionVector = new Vec2(0, (obj1.position.y > obj2.position.y) ? oy : -oy);
@@ -28,14 +29,14 @@ define('PhysicsEngine',
         };
         
         PhysicsEngine.prototype.getCollisionSideFromProjection = function (projectionVector) {
-            if (projectionVector.y != 0) {
+            if (projectionVector.y !== 0) {
                 if (projectionVector.y > 0) {
                     return 'top';
                 } else {
                     return 'bottom';
                 }
             }
-            if (projectionVector.x != 0) {
+            if (projectionVector.x !== 0) {
                 if (projectionVector.x > 0) {
                     return 'left';
                 } else {

@@ -1,6 +1,7 @@
 define('Entity',
     ['Vec2', 'Drawer', 'Resource', 'config'],
     function (Vec2, Drawer, Resource, config) {
+        'use strict';
         var drawer = new Drawer();
         var dt = config.MS_PER_UPDATE/1000;
         
@@ -15,26 +16,26 @@ define('Entity',
             this.velocity = new Vec2();
             this.acceleration = new Vec2();
             this.speed = config.speed;
-            this.collidable = config.collidable === false ? false : true;
-            this.movable = config.movable === true ? true : false;
+            this.collidable = config.collidable !== false;
+            this.movable = config.movable === true;
             
             this.resource = new Resource({
                 image: config.image,
                 scale:  config.scale,
                 size: new Vec2(config.size.x, config.size.y)
             });
-        };
+        }
         
         Entity.prototype.getDimensions = function () {
             return {
                 topLeft: new Vec2(this.position.x - this.wx.x, this.position.y - this.wy.y),
                 bottomRight: new Vec2(this.position.x + this.wx.x, this.position.y + this.wy.y)
-            };  
+            };
         };
         
-        Entity.prototype.collideWith = function (obj, projectionVector) {
+        Entity.prototype.collideWith = function () {
             if (this.movable) {
-                throw "Error: Not implemented";
+                throw 'Error: Not implemented';
             }
         };
 
@@ -56,7 +57,7 @@ define('Entity',
                     this.resource.nextFrame(this.facing);
                 } else {
                     this.resource.resetFrame(this.facing);
-                }   
+                }
             }
         };
         

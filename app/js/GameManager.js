@@ -1,15 +1,13 @@
 define('GameManager',
     ['config', 'keys', 'Entity', 'PhysicsEngine', 'debug'],
     function (config, keys, Entity, PhysicsEngine, debug) {
+        'use strict';
         var physicsEngine = new PhysicsEngine();
         function GameManager () {
             this.objects = [];
-            this.player;
         }
         
         GameManager.prototype.tick = window.requestAnimationFrame.bind(window);
-        
-        
         
         // GameManager.prototype.tick = (function () {
         //     return function (cb) {
@@ -22,7 +20,7 @@ define('GameManager',
         //     };
         // }());
 
-        GameManager.prototype.init = function () {            
+        GameManager.prototype.init = function () {
             var bg = new Entity({id: 'background', image: 'img/bg.png', collidable: false, size: {x: 640, y: 480}});
             bg.position.x = bg.wx.x;
             bg.position.y = bg.wy.y;
@@ -33,11 +31,10 @@ define('GameManager',
             bottom.position.y = 505;
             this.objects.push(bottom);
             
-            var bottom = new Entity({id: 'top', size: {x: 640, y: 50}});
+            bottom = new Entity({id: 'top', size: {x: 640, y: 50}});
             bottom.position.x = 320;
             bottom.position.y = -25;
             this.objects.push(bottom);
-            
             
             
             bottom = new Entity({id: 'block', size: {x: 50, y: 50}});
@@ -71,21 +68,21 @@ define('GameManager',
             player.collideWith = function (obj, projectionVector) {
                 var side = physicsEngine.getCollisionSideFromProjection(projectionVector);
                 switch (side) {
-                    case 'top':
-                        this.velocity.y = 0;
-                        this.acceleration.y = 0;
+                case 'top':
+                    this.velocity.y = 0;
+                    this.acceleration.y = 0;
                     break;
-                    case 'right':
-                        this.velocity.x = 0;
-                        this.acceleration.x = 0;
+                case 'right':
+                    this.velocity.x = 0;
+                    this.acceleration.x = 0;
                     break;
-                    case 'bottom':
-                        this.velocity.y = 0;
-                        this.acceleration.y = 0;
+                case 'bottom':
+                    this.velocity.y = 0;
+                    this.acceleration.y = 0;
                     break;
-                    case 'left':
-                        this.velocity.x = 0;
-                        this.acceleration.x = 0;
+                case 'left':
+                    this.velocity.x = 0;
+                    this.acceleration.x = 0;
                     break;
                 }
                 this.position.add(projectionVector.mul(-1));
@@ -94,7 +91,7 @@ define('GameManager',
             this.player = player;
             
             this.previous = Date.now();
-            this.lag = 0;            
+            this.lag = 0;
             this.tick(this.loop.bind(this));
         };
 
@@ -142,7 +139,7 @@ define('GameManager',
             
             for (var i = 0; i < collidableObjects.length; ++i) {
                 for (var j = i+1; j < collidableObjects.length; ++j) {
-                    var projectionVector = physicsEngine.AABB(collidableObjects[i], collidableObjects[j]);
+                    var projectionVector = physicsEngine.aabb(collidableObjects[i], collidableObjects[j]);
                     if (projectionVector) {
                         collidableObjects[i].collideWith(collidableObjects[j], projectionVector);
                         collidableObjects[j].collideWith(collidableObjects[i], projectionVector);
@@ -159,21 +156,21 @@ define('GameManager',
         
         GameManager.prototype.onKeyDown = function (e) {
             switch (e.keyCode) {
-                case keys.TOP:
+            case keys.UP:
                 break;
-                case keys.RIGHT:
-                    this.player.velocity.x = this.player.speed;
+            case keys.RIGHT:
+                this.player.velocity.x = this.player.speed;
                 break;
-                case keys.DOWN:
+            case keys.DOWN:
                 break;
-                case keys.LEFT:
-                    this.player.velocity.x = -this.player.speed;
+            case keys.LEFT:
+                this.player.velocity.x = -this.player.speed;
                 break;
-                case keys.SPACE:
-                    this.player.velocity.y -= 300;
+            case keys.SPACE:
+                this.player.velocity.y -= 300;
                 break;
-                default:
-                    return false;
+            default:
+                return false;
             }
             
             return true;
@@ -181,18 +178,16 @@ define('GameManager',
         
         GameManager.prototype.onKeyUp = function (e) {
             switch (e.keyCode) {
-                case keys.TOP:
+            case keys.UP:
                 break;
-                case keys.RIGHT:
-                    this.player.velocity.x = 0;
-                    return true;
+            case keys.RIGHT:
+                this.player.velocity.x = 0;
+                return true;
+            case keys.DOWN:
                 break;
-                case keys.DOWN:
-                break;
-                case keys.LEFT:
-                    this.player.velocity.x = 0;
-                    return true;
-                break;
+            case keys.LEFT:
+                this.player.velocity.x = 0;
+                return true;
             }
         };
         

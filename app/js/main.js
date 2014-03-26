@@ -3,6 +3,7 @@ require.config({
 });
 
 require(['GameManager'], function(GameManager) {
+    'use strict';
     var game = new GameManager();
     game.init();
     
@@ -10,7 +11,7 @@ require(['GameManager'], function(GameManager) {
         if (game.onKeyDown(e)) {
             e.preventDefault();
         }
-    }); 
+    });
     document.addEventListener('keyup', function (e) {
         if (game.onKeyUp(e)) {
             e.preventDefault();

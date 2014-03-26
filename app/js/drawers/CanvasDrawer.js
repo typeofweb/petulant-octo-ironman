@@ -1,6 +1,7 @@
 define('drawers/CanvasDrawer',
     [],
     function () {
+        'use strict';
         function CanvasDrawer () {
             this.canvas = document.querySelector('canvas');
             this.ctx = this.canvas.getContext('2d');
