@@ -10,6 +10,8 @@ define('Entity',
             this.wx = new Vec2(config.size.x/2, 0)
             this.wy = new Vec2(0, config.size.y/2);
             
+            this.facing = 1;
+            
             this.velocity = new Vec2();
             this.acceleration = new Vec2();
             this.speed = config.speed;
@@ -18,6 +20,7 @@ define('Entity',
             
             this.resource = new Resource({
                 image: config.image,
+                scale:  config.scale,
                 size: new Vec2(config.size.x, config.size.y)
             });
         };
@@ -47,8 +50,18 @@ define('Entity',
             this.velocity.x += this.acceleration.x * dt;
             this.velocity.y += this.acceleration.y * dt;
             
+            if (this.velocity.x) {
+                this.facing = this.velocity.x;
+            }
+            
             this.position.x  += this.velocity.x * dt + this.acceleration.x * dt * dt / 2;
             this.position.y  += this.velocity.y * dt + this.acceleration.y * dt * dt / 2;
+            
+            if (this.movable && this.velocity.len() > 5) {
+                this.resource.nextFrame(this.facing);
+            } else {
+                this.resource.resetFrame(this.facing);
+            }
         };
         
         Entity.prototype.stopMoving = function () {

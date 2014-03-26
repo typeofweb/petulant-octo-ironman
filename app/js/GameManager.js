@@ -6,6 +6,21 @@ define('GameManager',
             this.objects = [];
             this.player;
         }
+        
+        GameManager.prototype.tick = window.requestAnimationFrame.bind(window);
+        
+        
+        
+        // GameManager.prototype.tick = (function () {
+        //     return function (cb) {
+        //         var img = new Image();
+        //         img.onerror = function() { 
+        //             img.onerror = null; 
+        //             cb(); 
+        //         };
+        //         img.src = 'data:image/png,' + Math.random();
+        //     };
+        // }());
 
         GameManager.prototype.init = function () {            
             var bg = new Entity({id: 'background', image: 'img/bg.png', collidable: false, size: {x: 640, y: 480}});
@@ -18,12 +33,37 @@ define('GameManager',
             bottom.position.y = 455;
             this.objects.push(bottom);
             
-            bottom = new Entity({id: 'bottom', size: {x: 50, y: 50}});
+            var bottom = new Entity({id: 'top', size: {x: 640, y: 50}});
+            bottom.position.x = 320;
+            bottom.position.y = -25;
+            this.objects.push(bottom);
+            
+            
+            
+            bottom = new Entity({id: 'block', size: {x: 50, y: 50}});
             bottom.position.x = 25;
             bottom.position.y = 125;
             this.objects.push(bottom);
             
-            var player = new Entity({id: 'player', image: 'img/player.png', movable: true, speed: 200, size: {x: 44, y: 64.333333333}});
+            bottom = new Entity({id: 'block', size: {x: 85, y: 50}});
+            bottom.position.x = 92;
+            bottom.position.y = 175;
+            this.objects.push(bottom);
+            
+            bottom = new Entity({id: 'block', size: {x: 50, y: 50}});
+            bottom.position.x = 175;
+            bottom.position.y = 150;
+            this.objects.push(bottom);
+            
+            bottom = new Entity({id: 'block', size: {x: 50, y: 50}});
+            bottom.position.x = 245;
+            bottom.position.y = 225;
+            this.objects.push(bottom);
+            
+            
+            
+            var player = new Entity({id: 'player', image: 'img/player2.png', scale: 1, movable: true, speed: 200, size: {x: 20, y: 35}});
+            player.resource.frames = 9;
             player.position.x = player.wx.x;
             player.position.y = player.wy.y;
             player.acceleration.y = 300;
@@ -54,7 +94,7 @@ define('GameManager',
             
             this.previous = Date.now();
             this.lag = 0;            
-            window.requestAnimationFrame(this.loop.bind(this));
+            this.tick(this.loop.bind(this));
         };
 
         GameManager.prototype.loop = function () {
@@ -84,7 +124,7 @@ define('GameManager',
             }
             this.renderAll(interpolation);
             
-            window.requestAnimationFrame(this.loop.bind(this));
+            this.tick(this.loop.bind(this));
         };
         
         GameManager.prototype.applyGravity = function (obj) {

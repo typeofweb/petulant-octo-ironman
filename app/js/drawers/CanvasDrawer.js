@@ -8,19 +8,25 @@ define('drawers/CanvasDrawer',
         
         CanvasDrawer.prototype.drawObject = function (obj, position) {
             position = position || obj.position;
-            var x = position.x - obj.wx.x;
-            var y = position.y - obj.wy.y;
+            var dx = position.x - obj.wx.x;
+            var dy = position.y - obj.wy.y;
             
-            var sizeX = obj.wx.x*2;
-            var sizeY = obj.wy.y*2
+            var dw = obj.wx.x*2;
+            var dh = obj.wy.y*2
             
             var image = obj.resource.getImage();
             
+            
             if (image) {
-                this.ctx.drawImage(image, x, y, sizeX, sizeY);
+                if (obj.resource.frames) {
+                    var f = obj.resource.getRenderingInfo();
+                    this.ctx.drawImage(image, f.sx, f.sy, f.sw, f.sh, dx, dy, dw, dh);
+                } else {
+                    this.ctx.drawImage(image, dx, dy, dw, dh);
+                }
             } else {
                 this.ctx.fillStyle = '#ff0000';
-                this.ctx.fillRect(x, y, sizeX, sizeY);
+                this.ctx.fillRect(dx, dy, dw, dh);
             }
         };
         
