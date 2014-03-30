@@ -65,12 +65,14 @@ define('GameManager',
             player.position.y = player.wy.y;
             player.acceleration.y = 300;
             player.gravity = true;
+            player.canJump = true;
             player.collideWith = function (obj, projectionVector) {
                 var side = physicsEngine.getCollisionSideFromProjection(projectionVector);
                 switch (side) {
                 case 'top':
                     this.velocity.y = 0;
                     this.acceleration.y = 0;
+                    this.canJump = true;
                     break;
                 case 'right':
                     this.velocity.x = 0;
@@ -86,6 +88,12 @@ define('GameManager',
                     break;
                 }
                 this.position.add(projectionVector.mul(-1));
+            };
+            player.jump = function () {
+                if (this.canJump) {
+                    this.velocity.y -= 300;
+                    this.canJump = false;
+                }
             };
             this.objects.push(player);
             this.player = player;
@@ -167,7 +175,7 @@ define('GameManager',
                 this.player.velocity.x = -this.player.speed;
                 break;
             case keys.SPACE:
-                this.player.velocity.y -= 300;
+                this.player.jump();
                 break;
             default:
                 return false;
