@@ -5,6 +5,7 @@ define('GameManager',
         var physicsEngine = new PhysicsEngine();
         function GameManager () {
             this.objects = [];
+            this.keys = {};
         }
         
         GameManager.prototype.tick = window.requestAnimationFrame.bind(window);
@@ -110,9 +111,10 @@ define('GameManager',
             this.lag += elapsed;
             
             debug.fpsCounter(elapsed);
+
+            this.handleInput();
             
             var failSafe = 0;
-            
             while (this.lag >= config.MS_PER_UPDATE && failSafe++ < 10) {
                 this.updateAll();
                 this.lag -= config.MS_PER_UPDATE;
@@ -165,17 +167,11 @@ define('GameManager',
         GameManager.prototype.onKeyDown = function (e) {
             switch (e.keyCode) {
             case keys.UP:
-                break;
             case keys.RIGHT:
-                this.player.velocity.x = this.player.speed;
-                break;
             case keys.DOWN:
-                break;
             case keys.LEFT:
-                this.player.velocity.x = -this.player.speed;
-                break;
             case keys.SPACE:
-                this.player.jump();
+                this.keys[e.keyCode] = true;
                 break;
             default:
                 return false;
@@ -186,23 +182,54 @@ define('GameManager',
         
         GameManager.prototype.onKeyUp = function (e) {
             switch (e.keyCode) {
-            case keys.UP:
-                break;
-            case keys.RIGHT:
-                this.player.velocity.x = 0;
-                return true;
-            case keys.DOWN:
-                break;
-            case keys.LEFT:
-                this.player.velocity.x = 0;
-                return true;
+                case keys.UP:
+                case keys.RIGHT:
+                case keys.DOWN:
+                case keys.LEFT:
+                case keys.SPACE:
+                    this.keys[e.keyCode] = false;
+                    break;
+                default:
+                    return false;
             }
+
+            return true;
         };
         
         GameManager.prototype.queryObjects = function (q) {
             return this.objects.filter(function (obj) {
                 return obj.id === q;
             });
+        };
+
+        GameManager.prototype.handleInput = function () {
+            for (var key in this.keys) {
+                if (!this.keys.hasOwnProperty(key)) {
+                    continue;
+                }
+
+                if (this.keys[key] === true) {
+                    switch(+key) {
+                        case keys.LEFT:
+                            this.player.velocity.x = -this.player.speed;
+                            break;
+                        case keys.RIGHT:
+                            this.player.velocity.x = +this.player.speed;
+                            break;
+                        case keys.SPACE:
+                            this.player.jump();
+                            break;
+                    }
+                } else {
+                    switch(+key) {
+                        case keys.LEFT:
+                        case keys.RIGHT:
+                            this.player.velocity.x = 0;
+                            break;
+                    }
+                    delete this.keys[key];
+                }
+            }
         };
         
         return GameManager;
