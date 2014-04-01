@@ -80,8 +80,12 @@ define('GameManager',
                     this.acceleration.x = 0;
                     break;
                 case 'bottom':
-                    this.velocity.y = 0;
-                    this.acceleration.y = 0;
+                    if (this.velocity.y < 0) {
+                        this.velocity.y = 0;
+                    }
+                    if (this.acceleration.y < 0) {
+                        this.acceleration.y = 0;
+                    }
                     break;
                 case 'left':
                     this.velocity.x = 0;
@@ -89,6 +93,12 @@ define('GameManager',
                     break;
                 }
                 this.position.add(projectionVector.mul(-1));
+            };
+            player.update = function () {
+                Object.getPrototypeOf(this).update.call(this);
+                if (this.velocity.y >= config.DELTA) {
+                    this.canJump = false;
+                }
             };
             player.jump = function () {
                 if (this.canJump) {
@@ -121,6 +131,7 @@ define('GameManager',
             }
             if (failSafe >= 10) {
                 console.error ('failSafe!', this.lag);
+                this.lag = 0;
             }
             
             var interpolation = this.lag / config.MS_PER_UPDATE;
