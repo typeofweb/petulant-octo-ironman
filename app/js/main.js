@@ -17,6 +17,12 @@ require(['GameManager'], function(GameManager) {
             e.preventDefault();
         }
     });
+
+    document.querySelector('canvas').addEventListener('mousedown', function (e) {
+        if (game.onMouseDown(e)) {
+            e.preventDefault();
+        }
+    });
     
     window.game = game;
 });

@@ -6,7 +6,8 @@ define('keys',
             'RIGHT': 39,
             'DOWN': 40,
             'LEFT': 37,
-            'SPACE': 32
+            'SPACE': 32,
+            'c': 67
         };
         
         Object.freeze(keys);

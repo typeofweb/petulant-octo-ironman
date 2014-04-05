@@ -18,6 +18,8 @@ define('Entity',
             this.speed = config.speed;
             this.collidable = config.collidable !== false;
             this.movable = config.movable === true;
+
+            this.life = 1;
             
             this.resource = new Resource({
                 image: config.image,

@@ -8,7 +8,7 @@ define('Vec2',
         }
 
         Vec2.prototype.isZero = function () {
-            return this.x || this.y || true;
+            return (this.x || this.y) ? false : true;
         };
         
         Vec2.prototype.len = function () {

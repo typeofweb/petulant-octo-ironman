@@ -67,6 +67,7 @@ define('GameManager',
             player.acceleration.y = 300;
             player.gravity = true;
             player.canJump = true;
+            player.canShoot = true;
             player.collideWith = function (obj, projectionVector) {
                 var side = physicsEngine.getCollisionSideFromProjection(projectionVector);
                 switch (side) {
@@ -105,6 +106,25 @@ define('GameManager',
                     this.velocity.y -= 300;
                     this.canJump = false;
                 }
+            };
+            var _gm = this;
+            player.shoot = function () {
+                if (!this.canShoot) {
+                    return;
+                }
+                var rocket = new Entity({id: 'rocket', movable: true, speed: 800, size: {x: 20, y: 10}});
+                rocket.collideWith = function (obj) {
+                    rocket.offGame = true;
+                    --obj.life;
+                };
+                var facing = (player.facing > 0) ? 1 : -1;
+                rocket.position.add(player.position).add({x: facing * 20, y: 0});
+                rocket.velocity.x = facing * rocket.speed;
+                _gm.objects.push(rocket);
+                this.canShoot = false;
+                setTimeout(function () {
+                    player.canShoot = true;
+                }, 100);
             };
             this.objects.push(player);
             this.player = player;
@@ -152,7 +172,7 @@ define('GameManager',
                     physicsEngine.newtonEuler(o);
                 }
                 o.update();
-            });
+            }.bind(this));
             
             var collidableObjects = this.objects.filter(function (obj) {
                 return obj.collidable;
@@ -167,6 +187,19 @@ define('GameManager',
                     }
                 }
             }
+
+            // remove off game objects
+            this.objects.forEach(function (o, index) {
+                if (o.movable && (o.position.x > 640 || o.position.x < 0 || o.position.y > 480 || o.position.y < 0)) {
+                    o.offGame = true;
+                }
+                if (o.life <= 0) {
+                    o.offGame = true;
+                }
+                if (o.offGame) {
+                    this.objects.splice(index,1);
+                }
+            }.bind(this));
         };
 
         GameManager.prototype.renderAll = function (nextFrame) {
@@ -182,12 +215,13 @@ define('GameManager',
             case keys.DOWN:
             case keys.LEFT:
             case keys.SPACE:
+            case keys.c:
                 this.keys[e.keyCode] = true;
                 break;
             default:
                 return false;
             }
-            
+
             return true;
         };
         
@@ -198,12 +232,18 @@ define('GameManager',
                 case keys.DOWN:
                 case keys.LEFT:
                 case keys.SPACE:
+                case keys.c:
                     this.keys[e.keyCode] = false;
                     break;
                 default:
                     return false;
             }
 
+            return true;
+        };
+
+        GameManager.prototype.onMouseDown = function (e) {
+            console.log(e.offsetX, e.offsetY);
             return true;
         };
         
@@ -229,6 +269,9 @@ define('GameManager',
                             break;
                         case keys.SPACE:
                             this.player.jump();
+                            break;
+                        case keys.c:
+                            this.player.shoot();
                             break;
                     }
                 } else {
